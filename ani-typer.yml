@@ -1,0 +1,22 @@
+name: ani-typer
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  # ANI calculation
+  - pyani
+  - fastani
+  # R and R packages for tree-*heatmap.R
+  - r-base=4.3
+  - r-dendextend
+  - r-phylogram
+  - r-phangorn
+  - r-circlize
+  - bioconductor-complexheatmap
+  - r-viridis
+  # # ggtre
+  # - bioconductor-ggtree
+  # # NJ tree from distance matrix
+  # - perl-bioperl
+  #- biopython
