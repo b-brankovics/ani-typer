@@ -8,13 +8,17 @@ say = function(x) {
     write(x, stdout())
 }
 
+die = function(error) {
+  say(paste("ERROR:", error))
+  say("USAGE:")
+  say("\ttree-heatmap.R <newick tree file> <tab-separated table> [<output file>]")
+  say("\tWarning: The tab-separated table needs to be symmetrical table (rownames and colnames have to be the same.)")
+  .Internal(.invokeRestart(list(NULL, NULL), NULL))
+}
+
 if (length(args) < 2) {
-   say("ERROR: The script requires at least two arguments.")
-   say("USAGE:")
-   say("\ttree-heatmap.R <newick tree file> <tab-separated table> [<output file>]")
-   say("\tWarning: The tab-separated table needs to be symmetrical table (rownames and colnames have to be the same.)")
-   .Internal(.invokeRestart(list(NULL, NULL), NULL))
-   }
+  die("The script requires at least two arguments.")
+}
 
 
 say("Executing R script for plotting tree and heatmap")
@@ -72,7 +76,18 @@ coldendrogram  = rev( dendro %>% set("branches_lwd", 2) )
 
 # Set data in proper order and format with names
 d <- read.table(infile, sep = "\t", header = TRUE, row.names = 1)
-colnames(d) = rownames(d)
+# Check if column names are parsed correctly
+if (!identical(sort(colnames(d)), sort(rownames(d)))) {
+  col <- read.table(infile, sep = "\t", header = FALSE, row.names = 1, nrows = 2)
+  colnames(d) = col[1,]  
+}
+# Check if this fixed it and if it matches with the tree file
+if (!identical(sort(colnames(d)), sort(rownames(d)))) {
+  die("The script requires a symmetrical table (rownames and colnames have to be the same).")
+} else if (!identical(sort(colnames(d)), sort(tree$tip.label))) {
+  die("The IDs from the tree do not match with the table.")
+}
+
 d = d[tree$tip.label, tree$tip.label]
 data <- as.matrix(d)
 
