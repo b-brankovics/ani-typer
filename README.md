@@ -15,6 +15,17 @@ Types:
 - fastANI
 - mash
 
+## Getting started
+
+You can create a conda environment based on [`ani-typer.yml`](ani-typer.yml):
+
+```bash
+# Create a new environment based on the specifications
+conda env create -f ani-typer.yml
+# Start using
+conda activate ani-typer
+```
+
 ### [pyani](https://github.com/widdowquinn/pyani)
 
 `pyani` is a Python3 module and script that provides support for
